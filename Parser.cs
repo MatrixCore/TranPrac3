@@ -18,10 +18,14 @@ public class Parser {
 	public const int minus_Sym = 5;
 	public const int star_Sym = 6;
 	public const int slash_Sym = 7;
-	public const int NOT_SYM = 8;
+	public const int bang_Sym = 8;
+	public const int abs_Sym = 9;
+	public const int lparen_Sym = 10;
+	public const int rparen_Sym = 11;
+	public const int NOT_SYM = 12;
 	// pragmas
 
-	public const int maxT = 8;
+	public const int maxT = 12;
 
 	const bool T = true;
 	const bool x = false;
@@ -106,7 +110,7 @@ public class Parser {
 	}
 
 	static void Calc() {
-		while (la.kind == decNumber_Sym || la.kind == hexNumber_Sym) {
+		while (StartOf(1)) {
 			Expression();
 			Expect(equal_Sym);
 		}
@@ -127,15 +131,22 @@ public class Parser {
 	}
 
 	static void Term() {
-		Factor();
+		Math();
 		while (la.kind == star_Sym || la.kind == slash_Sym) {
 			if (la.kind == star_Sym) {
 				Get();
-				Factor();
+				Math();
 			} else {
 				Get();
-				Factor();
+				Math();
 			}
+		}
+	}
+
+	static void Math() {
+		Factor();
+		while (la.kind == bang_Sym) {
+			Get();
 		}
 	}
 
@@ -144,7 +155,22 @@ public class Parser {
 			Get();
 		} else if (la.kind == hexNumber_Sym) {
 			Get();
-		} else SynErr(9);
+		} else if (la.kind == lparen_Sym) {
+			Parentheses();
+		} else if (la.kind == abs_Sym) {
+			Absolute();
+		} else SynErr(13);
+	}
+
+	static void Parentheses() {
+		Expect(lparen_Sym);
+		Expression();
+		Expect(rparen_Sym);
+	}
+
+	static void Absolute() {
+		Expect(abs_Sym);
+		Parentheses();
 	}
 
 
@@ -159,7 +185,8 @@ public class Parser {
 	}
 
 	static bool[,] set = {
-		{T,x,x,x, x,x,x,x, x,x}
+		{T,x,x,x, x,x,x,x, x,x,x,x, x,x},
+		{x,T,T,x, x,x,x,x, x,T,T,x, x,x}
 
 	};
 
@@ -279,8 +306,12 @@ public class Errors {
 			case 5: s = "\"-\" expected"; break;
 			case 6: s = "\"*\" expected"; break;
 			case 7: s = "\"/\" expected"; break;
-			case 8: s = "??? expected"; break;
-			case 9: s = "invalid Factor"; break;
+			case 8: s = "\"!\" expected"; break;
+			case 9: s = "\"abs\" expected"; break;
+			case 10: s = "\"(\" expected"; break;
+			case 11: s = "\")\" expected"; break;
+			case 12: s = "??? expected"; break;
+			case 13: s = "invalid Factor"; break;
 
 			default: s = "error " + n; break;
 		}

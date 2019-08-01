@@ -63,8 +63,8 @@ public class Scanner {
 	const char EOL = '\n';
 	const int  eofSym = 0;
 	const int charSetSize = 256;
-	const int maxT = 8;
-	const int noSym = 8;
+	const int maxT = 12;
+	const int noSym = 12;
 	// terminals
 	const int EOF_SYM = 0;
 	const int decNumber_Sym = 1;
@@ -74,17 +74,21 @@ public class Scanner {
 	const int minus_Sym = 5;
 	const int star_Sym = 6;
 	const int slash_Sym = 7;
-	const int NOT_SYM = 8;
+	const int bang_Sym = 8;
+	const int abs_Sym = 9;
+	const int lparen_Sym = 10;
+	const int rparen_Sym = 11;
+	const int NOT_SYM = 12;
 	// pragmas
 
 	static short[] start = {
 	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-	  0,  0,  0,  0,  2,  0,  0,  0,  0,  0,  7,  5,  0,  6,  0,  8,
-	  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  4,  0,  0,
+	  0, 13,  0,  0,  2,  0,  0,  0, 17, 18, 11,  9,  0, 10,  0, 12,
+	  6,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  8,  0,  0,
 	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	  0, 14,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -193,15 +197,45 @@ public class Scanner {
 				  || ch >= 'A' && ch <= 'F')) { buf.Append(ch); NextCh(); goto case 3; }
 				else { t.kind = hexNumber_Sym; goto done; }
 			case 4:
-				{ t.kind = equal_Sym; goto done; }
+				if ((ch >= '0' && ch <= '9'
+				  || ch >= 'A' && ch <= 'F')) { buf.Append(ch); NextCh(); goto case 4; }
+				else if (ch == 'H') { buf.Append(ch); NextCh(); goto case 5; }
+				else { t.kind = noSym; goto done; }
 			case 5:
-				{ t.kind = plus_Sym; goto done; }
+				{ t.kind = hexNumber_Sym; goto done; }
 			case 6:
-				{ t.kind = minus_Sym; goto done; }
+				if ((ch >= '0' && ch <= '9')) { buf.Append(ch); NextCh(); goto case 7; }
+				else if ((ch >= 'A' && ch <= 'F')) { buf.Append(ch); NextCh(); goto case 4; }
+				else { t.kind = decNumber_Sym; goto done; }
 			case 7:
-				{ t.kind = star_Sym; goto done; }
+				if ((ch >= '0' && ch <= '9')) { buf.Append(ch); NextCh(); goto case 7; }
+				else if ((ch >= 'A' && ch <= 'F')) { buf.Append(ch); NextCh(); goto case 4; }
+				else if (ch == 'H') { buf.Append(ch); NextCh(); goto case 5; }
+				else { t.kind = decNumber_Sym; goto done; }
 			case 8:
+				{ t.kind = equal_Sym; goto done; }
+			case 9:
+				{ t.kind = plus_Sym; goto done; }
+			case 10:
+				{ t.kind = minus_Sym; goto done; }
+			case 11:
+				{ t.kind = star_Sym; goto done; }
+			case 12:
 				{ t.kind = slash_Sym; goto done; }
+			case 13:
+				{ t.kind = bang_Sym; goto done; }
+			case 14:
+				if (ch == 'b') { buf.Append(ch); NextCh(); goto case 15; }
+				else { t.kind = noSym; goto done; }
+			case 15:
+				if (ch == 's') { buf.Append(ch); NextCh(); goto case 16; }
+				else { t.kind = noSym; goto done; }
+			case 16:
+				{ t.kind = abs_Sym; goto done; }
+			case 17:
+				{ t.kind = lparen_Sym; goto done; }
+			case 18:
+				{ t.kind = rparen_Sym; goto done; }
 
 		}
 		done:

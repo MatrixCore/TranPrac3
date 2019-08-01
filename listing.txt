@@ -2,22 +2,27 @@
    1 COMPILER Calc  $CN
    2 /* Simple four function calculator
    3    P.D. Terry, Rhodes University, 2017 */
-   4 
-   5 CHARACTERS
-   6   digit      = "0123456789" .
-   7   hexdigit   = digit + "ABCDEF" .
-   8 
-   9 TOKENS
-  10   decNumber  = digit { digit } .
-  11   hexNumber  = "$" hexdigit { hexdigit } .
-  12 
-  13 IGNORE CHR(0) .. CHR(31)
+   4 /* Group B: Matthew Pitcairn, Ryan 'Old Man' McDonald, William Carpenter-Frank */
+   5 
+   6 
+   7 CHARACTERS
+   8   digit      = "0123456789" .
+   9   hexdigit   = digit + "ABCDEF" .
+  10 
+  11 TOKENS
+  12   decNumber  = digit { digit } .
+  13   hexNumber  = "$" hexdigit { hexdigit } | "0" hexdigit {hexdigit} "H".
   14 
-  15 PRODUCTIONS
-  16   Calc       = { Expression "=" } EOF .
-  17   Expression = Term { "+" Term  |  "-" Term } .
-  18   Term       = Factor { "*" Factor |  "/" Factor } .
-  19   Factor     = decNumber | hexNumber .
-  20 END Calc.
+  15 IGNORE CHR(0) .. CHR(31)
+  16 
+  17 PRODUCTIONS
+  18   Calc       = { Expression "=" } EOF .
+  19   Expression = Term { "+" Term  |  "-" Term } .
+  20   Term       = Math { "*" Math |  "/" Math } .
+  21   Math = Factor {"!"} .
+  22   Factor     = decNumber | hexNumber | Parentheses | Absolute  .
+  23   Absolute = "abs" Parentheses .
+  24   Parentheses = "(" Expression ")" .
+  25 END Calc.
 
 0 errors detected
