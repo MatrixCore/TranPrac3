@@ -31,7 +31,7 @@
     Statement         =   Block | ";"
                         | ConstDeclarations | VarDeclarations
                         | Assignment | IfStatement | WhileStatement | DoStatement
-						| RepeatStatement | ForStatement 
+						| RepeatStatement | ForStatement | BreakStatement
 						| ReturnStatement | HaltStatement
                         | ReadStatement | WriteStatement .
     ConstDeclarations = "const" OneConst { "," OneConst } ";" .
@@ -47,6 +47,7 @@
 	ForStatement	  =  "for" "(" Condition ")" Statement .
     WhileStatement    = "while" "(" Condition ")" Statement .
 	DoStatement		  = "do" Statement "while" "(" Condition ")" .
+	BreakStatement    =  [ "break;" ] .
 	RepeatStatement   = "repeat" Statement "until" "(" Condition ")" .
     ReturnStatement   = "return" ";" .
     HaltStatement     = "halt" ";" .
@@ -57,10 +58,12 @@
                                     { "," WriteElement } ")" ";" .
     WriteElement      = stringLit | Expression .
     Condition         = Expression .
+	Increment		  = ("++" number | identifier) | (number | identifier "++") . 
+	Decrement         = ("--" number | identifier) | (number | identifier "--") .
     Expression        = AddExp [ RelOp AddExp ] .
     AddExp            = [ "+" | "-" ] Term { AddOp Term } .
     Term              = Factor { MulOp Factor } .
-    Factor            =   Designator | Constant
+    Factor            =   Designator | Constant | Increment | Decrement
                         | "new" BasicType "[" Expression "]"
                         | "!" Factor | "(" Expression ")" .
     Type              = BasicType [ "[]" ] .
