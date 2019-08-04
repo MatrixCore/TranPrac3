@@ -1,0 +1,20 @@
+COMPILER Bool 
+
+CHARACTERS
+	bool = "true" | "false" .
+	char = "a" .. "z" .
+
+TOKENS
+
+IGNORE CHR(0) .. CHR(31)
+
+PRODUCTIONS
+	Statement = char "=" Expression ";" .
+	Expression = Single {Double} .
+	Parentheses = "(" Expression {Expression} ")" .
+	Double = And | Or .
+	Single = bool | Not .
+	Not = "!" (Expression | Parentheses) | "Not" (Expression | Parentheses) .
+	Or = "||" (Expression | Parentheses) | "or" (Expression | Parentheses) .
+	And = "&&" (Expression | Parentheses) | "and" (Expression | Parentheses) .
+End Bool.
