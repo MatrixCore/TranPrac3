@@ -1,28 +1,42 @@
+  LL1 warning in Expression: "||" is the start & successor of a deletable structure
+  LL1 warning in Expression: "or" is the start & successor of a deletable structure
+  LL1 warning in Expression: "&&" is the start & successor of a deletable structure
+  LL1 warning in Expression: "and" is the start & successor of a deletable structure
+  LL1 warning in And: "(" is the start of several alternatives
+  LL1 warning in And: "(" is the start of several alternatives
+  LL1 warning in Or: "(" is the start of several alternatives
+  LL1 warning in Or: "(" is the start of several alternatives
+  LL1 warning in Not: "(" is the start of several alternatives
+  LL1 warning in Not: "(" is the start of several alternatives
 
-   1 COMPILER Calc  $CN
+   1 COMPILER Boolio  
    2 /* Simple four function calculator
    3    P.D. Terry, Rhodes University, 2017 */
    4 /* Group B: Matthew Pitcairn, Ryan 'Old Man' McDonald, William Carpenter-Frank */
    5 
    6 
    7 CHARACTERS
-   8   digit      = "0123456789" .
-   9   hexdigit   = digit + "ABCDEF" .
-  10 
-  11 TOKENS
-  12   decNumber  = digit { digit } .
-  13   hexNumber  = "$" hexdigit { hexdigit } | "0" hexdigit {hexdigit} "H".
-  14 
-  15 IGNORE CHR(0) .. CHR(31)
-  16 
-  17 PRODUCTIONS
-  18   Calc       = { Expression "=" } EOF .
-  19   Expression = Term { "+" Term  |  "-" Term } .
-  20   Term       = Math { "*" Math |  "/" Math } .
-  21   Math = Factor {"!"} .
-  22   Factor     = decNumber | hexNumber | Parentheses | Absolute  .
-  23   Absolute = "abs" Parentheses .
-  24   Parentheses = "(" Expression ")" .
-  25 END Calc.
+   8   char = "a" .. "z" .
+   9 
+  10 TOKENS
+  11   bool = "true" | "false" .
+  12   variable = char .
+  13 
+  14 IGNORE CHR(0) .. CHR(31)
+  15 
+  16 PRODUCTIONS
+  17 	Boolio 		= { Statement } EOF .
+  18 	Statement 	= variable "=" Expression ";" .
+  19 	Expression 	= Single {Double} .
+  20 	Parentheses = "(" Expression {Expression} ")" .
+  21 	Double 		= And | Or .
+  22 	Single 		= bool | variable | Parentheses | Not  .
+  23 	Not 		= "!" (Expression | Parentheses) | "not" (Expression | Parentheses) .
+  24 	Or 			= "||" (Expression | Parentheses) | "or" (Expression | Parentheses) .
+  25 	And 		= "&&" (Expression | Parentheses) | "and" (Expression | Parentheses) .
+  26   
+  27 END Boolio.
+  28 	
 
 0 errors detected
+10 warnings detected

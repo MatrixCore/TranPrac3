@@ -1,15 +1,17 @@
-COMPILER Bool 
+COMPILER Bool
+/* Group B: Matthew Pitcairn, Ryan 'Old Man' McDonald, William Carpenter-Frank */
 
 CHARACTERS
-	bool = "true" | "false" .
 	char = "a" .. "z" .
 
 TOKENS
-
+	bool = "true" | "false" .
+	assign = char "=" .
+	
 IGNORE CHR(0) .. CHR(31)
 
 PRODUCTIONS
-	Statement = char "=" Expression ";" .
+	Bool = assign Expression ";" EOF .
 	Expression = Single {Double} .
 	Parentheses = "(" Expression {Expression} ")" .
 	Double = And | Or .
@@ -17,4 +19,5 @@ PRODUCTIONS
 	Not = "!" (Expression | Parentheses) | "Not" (Expression | Parentheses) .
 	Or = "||" (Expression | Parentheses) | "or" (Expression | Parentheses) .
 	And = "&&" (Expression | Parentheses) | "and" (Expression | Parentheses) .
-End Bool.
+	
+END Bool.

@@ -10,13 +10,14 @@
     letter     = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                  + "abcdefghijklmnopqrstuvwxyz" .
     digit      = "0123456789" .
+	nonzero = digit - "0" .
     stringCh   = ANY - '"' - control - backslash .
     charCh     = ANY - "'" - control - backslash .
     printable  = ANY - control .
 
   TOKENS
     identifier = letter { letter | digit | "_" } .
-    number     = "0" | digit { digit } .
+    number     = "0" | nonzero { digit } .
     stringLit  = '"' { stringCh | backslash printable } '"' .
     charLit    = "'" ( charCh   | backslash printable ) "'" .
 
@@ -40,8 +41,8 @@
     OneVar            = identifier [ "=" Expression ] .
     Assignment        = Designator "=" Expression ";" .
     Designator        = identifier [ "[" Expression "]" ] .
-    IfStatement       = "if" "(" Condition ")" Statement [ElseStatement] .
-	ElseStatement     = "else" Statement
+    IfStatement       = "if" "(" Condition ")" Statement [ ElseStatement ] .
+	ElseStatement     = "else" Statement .
     WhileStatement    = "while" "(" Condition ")" Statement .
     ReturnStatement   = "return" ";" .
     HaltStatement     = "halt" ";" .

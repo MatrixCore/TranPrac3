@@ -1,0 +1,28 @@
+COMPILER Boolio  
+/* Simple four function calculator
+   P.D. Terry, Rhodes University, 2017 */
+/* Group B: Matthew Pitcairn, Ryan 'Old Man' McDonald, William Carpenter-Frank */
+
+
+CHARACTERS
+  char = "a" .. "z" .
+
+TOKENS
+  bool = "true" | "false" .
+  variable = char .
+
+IGNORE CHR(0) .. CHR(31)
+
+PRODUCTIONS
+	Boolio 		= { Statement } EOF .
+	Statement 	= variable "=" Expression ";" .
+	Expression 	= Single {Double} .
+	Parentheses = "(" Expression {Expression} ")" .
+	Double 		= And | Or .
+	Single 		= bool | variable | Parentheses | Not  .
+	Not 		= "!" (Expression | Parentheses) | "not" (Expression | Parentheses) .
+	Or 			= "||" (Expression | Parentheses) | "or" (Expression | Parentheses) .
+	And 		= "&&" (Expression | Parentheses) | "and" (Expression | Parentheses) .
+  
+END Boolio.
+	
