@@ -16,8 +16,8 @@ PRODUCTIONS
 	Parentheses = "(" Expression {Expression} ")" .
 	Double = And | Or .
 	Single = bool | Not .
-	Not = "!" (Expression | Parentheses) | "Not" (Expression | Parentheses) .
 	Or = "||" (Expression | Parentheses) | "or" (Expression | Parentheses) .
 	And = "&&" (Expression | Parentheses) | "and" (Expression | Parentheses) .
+	Not = "!" (Expression | Parentheses) | "Not" (Expression | Parentheses) .
 	
 END Bool.
