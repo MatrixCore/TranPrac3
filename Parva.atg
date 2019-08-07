@@ -33,7 +33,7 @@
                         | ConstDeclarations | VarDeclarations
                         | Assignment | IfStatement | WhileStatement | DoStatement
 						| RepeatStatement | ForStatement | BreakStatement
-						| ReturnStatement | HaltStatement
+						| ReturnStatement | HaltStatement | Increment
                         | ReadStatement | WriteStatement  | WriteLine | ReadLine .
     ConstDeclarations = "const" OneConst { "," OneConst } ";" .
     OneConst          = identifier "=" Constant .
@@ -41,7 +41,7 @@
                         | "true" | "false" | "null" .
     VarDeclarations   = Type OneVar { "," OneVar } ";" .
     OneVar            = identifier [ "=" Expression ] .
-    Assignment        = Designator "=" Expression ";" .
+    Assignment        = Designator ("=" Expression | "++" | "--" ) ";" .
     Designator        = identifier [ "[" Expression "]" ] .
     IfStatement       = "if" "(" Condition ")" Statement [ ElseStatement ] .
 	ElseStatement     = "else" Statement .
@@ -54,20 +54,19 @@
     HaltStatement     = "halt" ";" .
     ReadStatement     = ( "read" "(" ReadElement
                                    { "," ReadElement } ")" ";" ) .
-	ReadLine		  = "readLine" "(" { ReadElement } ")" ";" .
+	ReadLine		  = "readLine" "(" [ReadElement] { "," ReadElement } ")" ";" .
     ReadElement       = stringLit | Designator .
     WriteStatement    = ( "write" "(" WriteElement
                                     { "," WriteElement } ")" ";" ) .
 	WriteLine		  = "writeLine" "(" { WriteElement } ")" ";" .
     WriteElement      = stringLit | Expression .
     Condition         = Expression .
-	Increment		  = ("++" number | identifier) | (number | identifier "++") . 
-	Decrement         = ("--" number | identifier) | (number | identifier "--") .
+	Increment		  = (("++" | "--") Designator) ";" .
     Expression        = AddExp [ RelOp AddExp ] | SetBody .
-	SetBody			  = "{" [ Expression "in" ] [ Expression ] {".."} { "," Expression } "}" .
+	SetBody			  = "{" [Expression] ["in"] ( { (".." Expression) | "," Expression } ) "}" .
     AddExp            = [ "+" | "-" ] Term { AddOp Term } .
     Term              = Factor { MulOp Factor } .
-    Factor            =   Designator | Constant | Increment | Decrement
+    Factor            =   Designator | Constant
                         | "new" BasicType "[" Expression "]"
                         | "!" Factor | "(" Expression ")" .
     Type              = BasicType [ "[]" ] .
