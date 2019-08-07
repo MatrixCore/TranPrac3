@@ -20,9 +20,9 @@ PRODUCTIONS
 	Parentheses = "(" Expression {Expression} ")" .
 	Double 		= And | Or .
 	Single 		= bool | variable | Parentheses | Not  .
-	Not 		= "!" (Expression | Parentheses) | "not" (Expression | Parentheses) .
 	Or 			= "||" (Expression | Parentheses) | "or" (Expression | Parentheses) .
 	And 		= "&&" (Expression | Parentheses) | "and" (Expression | Parentheses) .
+	Not 		= "!" (Expression | Parentheses) | "not" (Expression | Parentheses) .
   
 END Boolio.
 	
