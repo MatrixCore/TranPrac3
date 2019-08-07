@@ -2,6 +2,7 @@
   /* Parva level 1 grammar  - Coco/R for C# (EBNF)
      P.D. Terry, Rhodes University, 2003
      Grammar only */
+     // Group B - Matthew Pitcairn, William Carpenter-Frank, Ryan McDonaol
 
   CHARACTERS
     lf         = CHR(10) .
@@ -33,7 +34,7 @@
                         | Assignment | IfStatement | WhileStatement | DoStatement
 						| RepeatStatement | ForStatement | BreakStatement
 						| ReturnStatement | HaltStatement
-                        | ReadStatement | WriteStatement .
+                        | ReadStatement | WriteStatement  | WriteLine | ReadLine .
     ConstDeclarations = "const" OneConst { "," OneConst } ";" .
     OneConst          = identifier "=" Constant .
     Constant          = number | charLit
@@ -47,27 +48,30 @@
 	ForStatement	  =  "for" "(" Condition ")" Statement .
     WhileStatement    = "while" "(" Condition ")" Statement .
 	DoStatement		  = "do" Statement "while" "(" Condition ")" .
-	BreakStatement    =  [ "break;" ] .
+	BreakStatement    =  "break;" .
 	RepeatStatement   = "repeat" Statement "until" "(" Condition ")" .
     ReturnStatement   = "return" ";" .
     HaltStatement     = "halt" ";" .
-    ReadStatement     = "read" "(" ReadElement
-                                   { "," ReadElement } ")" ";" .
+    ReadStatement     = ( "read" "(" ReadElement
+                                   { "," ReadElement } ")" ";" ) .
+	ReadLine		  = "readLine" "(" { ReadElement } ")" ";" .
     ReadElement       = stringLit | Designator .
-    WriteStatement    = "write" "(" WriteElement
-                                    { "," WriteElement } ")" ";" .
+    WriteStatement    = ( "write" "(" WriteElement
+                                    { "," WriteElement } ")" ";" ) .
+	WriteLine		  = "writeLine" "(" { WriteElement } ")" ";" .
     WriteElement      = stringLit | Expression .
     Condition         = Expression .
 	Increment		  = ("++" number | identifier) | (number | identifier "++") . 
 	Decrement         = ("--" number | identifier) | (number | identifier "--") .
-    Expression        = AddExp [ RelOp AddExp ] .
+    Expression        = AddExp [ RelOp AddExp ] | SetBody .
+	SetBody			  = "{" [ Expression "in" ] [ Expression ] {".."} { "," Expression } "}" .
     AddExp            = [ "+" | "-" ] Term { AddOp Term } .
     Term              = Factor { MulOp Factor } .
     Factor            =   Designator | Constant | Increment | Decrement
                         | "new" BasicType "[" Expression "]"
                         | "!" Factor | "(" Expression ")" .
     Type              = BasicType [ "[]" ] .
-    BasicType         = "int" | "bool" .
+    BasicType         = "int" | "bool" | "char" | "set" .
     AddOp             = "+" | "-" | "||" .
     MulOp             = "*" | "/" | "%" | "&&" .
     RelOp             = "==" | "!=" | "<" | "<=" | ">" | ">=" .
