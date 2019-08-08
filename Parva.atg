@@ -63,7 +63,7 @@
     Condition         = Expression .
 	Increment		  = (("++" | "--") Designator) ";" .
     Expression        = AddExp [ RelOp AddExp ] | SetBody .
-	SetBody			  = "{" [Expression] ["in"] ( { (".." Expression) | "," Expression } ) "}" .
+	SetBody			  = "{" [Expression] ( { (".." Expression) | "," Expression } ) "}" .
     AddExp            = [ "+" | "-" ] Term { AddOp Term } .
     Term              = Factor { MulOp Factor } .
     Factor            =   Designator | Constant
@@ -72,6 +72,6 @@
     Type              = BasicType [ "[]" ] .
     BasicType         = "int" | "bool" | "char" | "set" .
     AddOp             = "+" | "-" | "||" .
-    MulOp             = "*" | "/" | "%" | "&&" .
+    MulOp             = "*" | "/" | "%" | "&&" | "in" .
     RelOp             = "==" | "!=" | "<" | "<=" | ">" | ">=" .
   END Parva.
